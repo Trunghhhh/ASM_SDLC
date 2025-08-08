@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Phòng Khách Sạn</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+
+        .btn {
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            padding: 14px;
+            width: 100%;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-style: italic;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Biểu Mẫu Đặt Phòng</h2>
+    <form action="confirm-booking.php" method="POST">
+        <label for="name">Họ và tên:</label>
+        <input type="text" id="name" name="name" placeholder="Nguyễn Văn A" required>
+
+        <label for="phone">Số điện thoại:</label>
+        <input type="tel" id="phone" name="phone" placeholder="0987654321" required pattern="[0-9]{10,11}">
+
+        <label for="checkin">Ngày nhận phòng:</label>
+        <input type="date" id="checkin" name="checkin" required>
+
+        <label for="checkout">Ngày trả phòng:</label>
+        <input type="date" id="checkout" name="checkout" required>
+
+        <label for="room">Loại phòng:</label>
+        <select id="room" name="room" required>
+            <option value="">-- Chọn loại phòng --</option>
+            <option value="Phòng Đơn (Có ghế tình yêu)">Phòng Đơn (Có ghế tình yêu)</option>
+            <option value="Phòng Đôi">Phòng Đôi</option>
+            <option value="Phòng VIP">Phòng VIP</option>
+            <option value="Phòng Gia đình">Phòng Gia đình</option>
+        </select>
+
+        <button type="submit" class="btn">Xác nhận đặt phòng</button>
+    </form>
+    <p class="note">Chúng tôi sẽ liên hệ lại với bạn để xác nhận đặt phòng.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | HotelBooking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; }
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .sidebar-menu a:hover { transform: translateX(5px); }
+        .sidebar-menu a.active { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #3b82f6; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e0e7ff; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+    
+    <div class="flex flex-grow">
+        <aside class="w-64 bg-slate-800 text-white flex flex-col rounded-r-3xl shadow-2xl overflow-hidden fixed h-full z-50 transition-all duration-300 ease-in-out lg:static transform -translate-x-full lg:translate-x-0" id="sidebar">
+            <div class="p-6 text-center border-b border-gray-700">
+                <h3 class="text-2xl font-bold">Hotel Admin</h3>
+            </div>
+            <nav class="flex-grow p-4 sidebar-nav">
+                <ul class="space-y-2 sidebar-menu">
+                    <li><a href="dashboard.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all active"><i class="fas fa-tachometer-alt w-5 mr-3"></i> Dashboard</a></li>
+                    <li><a href="rooms.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-bed w-5 mr-3"></i> Quản lý Phòng</a></li>
+                    <li><a href="bookings.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-calendar-alt w-5 mr-3"></i> Quản lý Đặt phòng</a></li>
+                    <li><a href="users.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-users w-5 mr-3"></i> Quản lý Người dùng</a></li>
+                    <li><a href="reports.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-chart-line w-5 mr-3"></i> Báo cáo & Đánh giá</a></li>
+                    <li><a href="settings.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-cogs w-5 mr-3"></i> Cài đặt</a></li>
+                </ul>
+            </nav>
+            <div class="p-4 border-t border-gray-700 mt-auto">
+                <a href="../login.html" id="logoutBtn" class="flex items-center p-3 text-sm font-medium rounded-lg text-red-400 hover:bg-slate-700 transition-all"><i class="fas fa-sign-out-alt w-5 mr-3"></i> Đăng xuất</a>
+            </div>
+        </aside>
+
+        <main class="flex-grow p-6 lg:ml-64 transition-all duration-300 ease-in-out">
+            <header class="bg-white rounded-2xl shadow-lg p-4 flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <button id="toggleSidebar" class="lg:hidden p-2 mr-4 text-gray-600 hover:text-gray-900 focus:outline-none"><i class="fas fa-bars text-xl"></i></button>
+                    <h2 id="pageTitle" class="text-2xl font-bold text-gray-800">Dashboard</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="user-profile flex items-center">
+                        <img src="https://i.pravatar.cc/40?u=admin" alt="Avatar Admin" class="user-avatar w-10 h-10 rounded-full object-cover border-2 border-indigo-500">
+                        <span class="user-info ml-3 hidden md:block text-gray-700">Chào mừng, <strong id="adminName" class="font-semibold text-gray-900">Admin</strong>!</span>
+                    </div>
+                </div>
+            </header>
+
+            <section id="dashboard-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 flex items-center space-x-4">
+                        <div class="p-4 bg-blue-100 text-blue-600 rounded-full">
+                            <i class="fas fa-bed text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500">Tổng số phòng</h4>
+                            <p class="text-2xl font-bold text-gray-900"></p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 flex items-center space-x-4">
+                        <div class="p-4 bg-green-100 text-green-600 rounded-full">
+                            <i class="fas fa-calendar-check text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500">Đặt phòng hôm nay</h4>
+                            <p class="text-2xl font-bold text-gray-900"></p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 flex items-center space-x-4">
+                        <div class="p-4 bg-yellow-100 text-yellow-600 rounded-full">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500">Tổng số khách hàng</h4>
+                            <p class="text-2xl font-bold text-gray-900"></p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-lg p-6 flex items-center space-x-4">
+                        <div class="p-4 bg-red-100 text-red-600 rounded-full">
+                            <i class="fas fa-dollar-sign text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500">Doanh thu tháng này</h4>
+                            <p class="text-2xl font-bold text-gray-900"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Đặt phòng gần đây</h3>
+                        <a href="bookings.html" class="text-blue-600 font-medium hover:underline">Xem tất cả</a>
+                    </div>
+                    <div class="overflow-x-auto rounded-lg border border-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200 bg-white text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Booking ID</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Khách hàng</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Phòng</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Ngày nhận</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Ngày trả</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Tổng tiền</th>
+                                    <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        });
+    </script>
+</body>
+</html>

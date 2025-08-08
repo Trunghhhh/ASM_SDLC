@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký tài khoản | Hotel Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Biến màu sắc tương tự như main.html và login.html */
+        :root{
+            --primary: #9C27B0; /* Tím */
+            --primary-light: #d999d9;
+            --primary-dark: #7B1FA2;
+            --bg: #f7f7f9;
+            --text: #333;
+            --secondary-bg: #e0f2f7; /* Màu nền nhẹ cho form */
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif; /* Sử dụng font Nunito */
+        }
+
+        body {
+            background: linear-gradient(to right, #e0eafc, #cfdef3); /* Nền gradient nhẹ nhàng */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; /* Thêm padding để tránh form dính sát mép trên/dưới */
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 40px 50px; /* Tăng padding để form thoáng hơn */
+            border-radius: 15px; /* Bo góc nhất quán */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Đổ bóng mạnh hơn, đẹp hơn */
+            width: 100%;
+            max-width: 450px; /* Tăng chiều rộng tối đa */
+            text-align: center; /* Căn giữa nội dung trong container */
+        }
+
+        h2 {
+            font-size: 32px; /* Tăng cỡ chữ */
+            color: var(--primary); /* Sử dụng màu primary */
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px; /* Tăng khoảng cách giữa các input group */
+            text-align: left; /* Căn trái label nếu có */
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%; /* Căn giữa icon theo chiều dọc */
+            left: 15px; /* Khoảng cách từ lề trái */
+            transform: translateY(-50%); /* Dịch chuyển để căn giữa chính xác */
+            color: #888;
+            font-size: 18px; /* Tăng kích thước icon */
+            pointer-events: none; /* Đảm bảo icon không cản trở input */
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px 12px 48px; /* Tăng padding trái để chứa icon */
+            border: 2px solid #ddd; /* Border rõ hơn */
+            border-radius: 10px; /* Bo góc nhiều hơn */
+            font-size: 16px; /* Tăng cỡ chữ */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary); /* Màu border khi focus */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2); /* Hiệu ứng shadow khi focus */
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px 25px; /* Tăng padding */
+            background: var(--primary); /* Sử dụng màu primary */
+            color: #fff;
+            font-size: 18px; /* Tăng cỡ chữ */
+            font-weight: 700; /* Đậm hơn */
+            border: none;
+            border-radius: 10px; /* Bo góc nhất quán */
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 10px; /* Khoảng cách trên */
+        }
+
+        input[type="submit"]:hover {
+            background: var(--primary-dark); /* Màu tối hơn khi hover */
+            transform: translateY(-2px); /* Hiệu ứng nhấc nhẹ */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Shadow khi hover */
+        }
+
+        p {
+            text-align: center;
+            margin-top: 25px; /* Tăng khoảng cách */
+            font-size: 15px; /* Tăng cỡ chữ */
+            color: #666;
+        }
+
+        a {
+            color: var(--primary); /* Sử dụng màu primary */
+            text-decoration: none;
+            font-weight: 700; /* Đậm hơn */
+            transition: 0.2s ease;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: var(--primary-dark); /* Màu tối hơn khi hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .form-container {
+                padding: 30px 25px; /* Giảm padding trên mobile */
+            }
+            h2 {
+                font-size: 28px;
+            }
+            .input-group input {
+                font-size: 15px;
+                padding: 10px 12px 10px 45px; /* Điều chỉnh padding cho input trên mobile */
+            }
+            input[type="submit"] {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Tạo tài khoản mới</h2>
+        <form action="register.php" method="POST">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="fullname" name="fullname" placeholder="Họ và tên của bạn" required />
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" name="email" placeholder="Địa chỉ Email" required />
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" placeholder="Tạo mật khẩu" required />
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="phone" name="phone" placeholder="Số điện thoại (tùy chọn)" />
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-location-dot"></i>
+                <input type="text" id="address" name="address" placeholder="Địa chỉ (tùy chọn)" />
+            </div>
+
+            <input type="submit" value="Đăng ký tài khoản" />
+        </form>
+        <p>Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a></p>
+    </div>
+</body>
+</html>

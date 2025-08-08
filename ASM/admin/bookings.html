@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Đặt phòng | HotelBooking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; }
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .sidebar-menu a:hover { transform: translateX(5px); }
+        .sidebar-menu a.active { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #3b82f6; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e0e7ff; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+    
+    <div class="flex flex-grow">
+        <aside class="w-64 bg-slate-800 text-white flex flex-col rounded-r-3xl shadow-2xl overflow-hidden fixed h-full z-50 transition-all duration-300 ease-in-out lg:static transform -translate-x-full lg:translate-x-0" id="sidebar">
+            <div class="p-6 text-center border-b border-gray-700">
+                <h3 class="text-2xl font-bold">Hotel Admin</h3>
+            </div>
+            <nav class="flex-grow p-4 sidebar-nav">
+                <ul class="space-y-2 sidebar-menu">
+                    <li><a href="dashboard.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-tachometer-alt w-5 mr-3"></i> Dashboard</a></li>
+                    <li><a href="rooms.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-bed w-5 mr-3"></i> Quản lý Phòng</a></li>
+                    <li><a href="bookings.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all active"><i class="fas fa-calendar-alt w-5 mr-3"></i> Quản lý Đặt phòng</a></li>
+                    <li><a href="users.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-users w-5 mr-3"></i> Quản lý Người dùng</a></li>
+                    <li><a href="reports.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-chart-line w-5 mr-3"></i> Báo cáo & Đánh giá</a></li>
+                    <li><a href="settings.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-cogs w-5 mr-3"></i> Cài đặt</a></li>
+                </ul>
+            </nav>
+            <div class="p-4 border-t border-gray-700 mt-auto">
+                <a href="../logout.php" id="logoutBtn" class="flex items-center p-3 text-sm font-medium rounded-lg text-red-400 hover:bg-slate-700 transition-all"><i class="fas fa-sign-out-alt w-5 mr-3"></i> Đăng xuất</a>
+            </div>
+        </aside>
+
+        <main class="flex-grow p-6 lg:ml-64 transition-all duration-300 ease-in-out">
+            <header class="bg-white rounded-2xl shadow-lg p-4 flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <button id="toggleSidebar" class="lg:hidden p-2 mr-4 text-gray-600 hover:text-gray-900 focus:outline-none"><i class="fas fa-bars text-xl"></i></button>
+                    <h2 id="pageTitle" class="text-2xl font-bold text-gray-800">Quản lý Đặt phòng</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="user-profile flex items-center">
+                        <img src="https://i.pravatar.cc/40?u=admin" alt="Avatar Admin" class="user-avatar w-10 h-10 rounded-full object-cover border-2 border-indigo-500">
+                        <span class="user-info ml-3 hidden md:block text-gray-700">Chào mừng, <strong id="adminName" class="font-semibold text-gray-900">Admin</strong>!</span>
+                    </div>
+                </div>
+            </header>
+
+            <section id="bookings-content" class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Danh sách Đặt phòng</h3>
+                    </div>
+
+                <div id="message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span id="message-text" class="block sm:inline"></span>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Booking ID</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Khách hàng</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Phòng</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Ngày nhận</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Ngày trả</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Tổng tiền</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Trạng thái</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-center text-gray-900">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTable" class="divide-y divide-gray-200">
+                            <tr>
+                                <td colspan="8" class="px-4 py-2 text-center text-gray-500">Đang tải dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="bookingModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-11/12 md:w-1/2 p-6">
+            <div class="flex justify-between items-center pb-3">
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-800">Chỉnh sửa Đặt phòng</h3>
+                <button class="text-gray-400 hover:text-gray-600" onclick="closeModal()">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="bookingForm">
+                <input type="hidden" name="BookingID" id="BookingID">
+                <div class="mb-4">
+                    <label for="UserID" class="block text-gray-700 text-sm font-bold mb-2">Khách hàng</label>
+                    <select id="UserID" name="UserID" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></select>
+                </div>
+                <div class="mb-4">
+                    <label for="RoomID" class="block text-gray-700 text-sm font-bold mb-2">Phòng</label>
+                    <select id="RoomID" name="RoomID" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></select>
+                </div>
+                <div class="mb-4">
+                    <label for="CheckIn" class="block text-gray-700 text-sm font-bold mb-2">Ngày nhận phòng</label>
+                    <input type="date" id="CheckIn" name="CheckIn" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="CheckOut" class="block text-gray-700 text-sm font-bold mb-2">Ngày trả phòng</label>
+                    <input type="date" id="CheckOut" name="CheckOut" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="TotalPrice" class="block text-gray-700 text-sm font-bold mb-2">Tổng tiền</label>
+                    <input type="number" step="0.01" id="TotalPrice" name="TotalPrice" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="Status" class="block text-gray-700 text-sm font-bold mb-2">Trạng thái</label>
+                    <select id="Status" name="Status" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Canceled">Canceled</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="bg-gray-400 text-white px-4 py-2 rounded-lg font-medium mr-2 hover:bg-gray-500 transition-colors" onclick="closeModal()">Hủy</button>
+                    <button type="submit" name="action" value="edit" id="submitBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'bookings.php';
+        const bookingsTableBody = document.getElementById('bookingsTable');
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingModal = document.getElementById('bookingModal');
+        const messageBox = document.getElementById('message');
+        const messageText = document.getElementById('message-text');
+
+        function showMessage(text, isError = false) {
+            messageText.textContent = text;
+            messageBox.classList.remove('hidden');
+            messageBox.className = isError ? 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4' : 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4';
+            setTimeout(() => { messageBox.classList.add('hidden'); }, 3000);
+        }
+
+        async function fetchBookings() {
+            bookingsTableBody.innerHTML = '<tr><td colspan="8" class="px-4 py-2 text-center text-gray-500">Đang tải dữ liệu...</td></tr>';
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Lỗi máy chủ khi tải dữ liệu.');
+                const bookings = await response.json();
+
+                bookingsTableBody.innerHTML = '';
+                if (bookings.length === 0) {
+                    bookingsTableBody.innerHTML = '<tr><td colspan="8" class="px-4 py-2 text-center text-gray-500">Không có đặt phòng nào trong hệ thống.</td></tr>';
+                } else {
+                    bookings.forEach(booking => {
+                        const statusClass = booking.Status === 'Confirmed' ? 'bg-green-100 text-green-800' :
+                                            booking.Status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800';
+
+                        const row = `
+                            <tr data-booking-id="${booking.BookingID}">
+                                <td class="px-4 py-2 text-gray-700">${booking.BookingID}</td>
+                                <td class="px-4 py-2 text-gray-700">${booking.FullName}</td>
+                                <td class="px-4 py-2 text-gray-700">${booking.RoomNumber}</td>
+                                <td class="px-4 py-2 text-gray-700">${new Date(booking.CheckIn).toLocaleDateString('vi-VN')}</td>
+                                <td class="px-4 py-2 text-gray-700">${new Date(booking.CheckOut).toLocaleDateString('vi-VN')}</td>
+                                <td class="px-4 py-2 text-gray-700">${parseFloat(booking.TotalPrice).toLocaleString('vi-VN')} VNĐ</td>
+                                <td class="px-4 py-2 text-gray-700">
+                                    <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold ${statusClass}">
+                                        ${booking.Status}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-2 text-center text-gray-700">
+                                    <div class="inline-flex items-center space-x-2">
+                                        <button onclick='editBooking(${JSON.stringify(booking)})' class="text-blue-600 hover:text-blue-800 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick='deleteBooking(${booking.BookingID})' class="text-red-600 hover:text-red-800 transition-colors">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        bookingsTableBody.innerHTML += row;
+                    });
+                }
+            } catch (error) {
+                bookingsTableBody.innerHTML = `<tr><td colspan="8" class="px-4 py-2 text-center text-red-500">Lỗi khi tải dữ liệu: ${error.message}</td></tr>`;
+            }
+        }
+
+        async function fetchDropdownData() {
+            try {
+                const [usersResponse, roomsResponse] = await Promise.all([
+                    fetch('users.php?action=get_all_customers'),
+                    fetch('rooms.php?action=get_all_rooms')
+                ]);
+
+                const users = await usersResponse.json();
+                const rooms = await roomsResponse.json();
+
+                const userSelect = document.getElementById('UserID');
+                userSelect.innerHTML = users.map(user => `<option value="${user.UserID}">${user.FullName}</option>`).join('');
+
+                const roomSelect = document.getElementById('RoomID');
+                roomSelect.innerHTML = rooms.map(room => `<option value="${room.RoomID}">${room.RoomNumber} - ${room.Type}</option>`).join('');
+                
+            } catch (error) {
+                console.error('Lỗi khi tải dữ liệu dropdown:', error);
+                showMessage('Lỗi khi tải dữ liệu khách hàng và phòng.', true);
+            }
+        }
+
+        const openModal = () => { bookingModal.classList.remove('hidden'); bookingModal.classList.add('flex'); };
+        const closeModal = () => {
+            bookingModal.classList.add('hidden');
+            bookingModal.classList.remove('flex');
+            bookingForm.reset();
+            document.getElementById('BookingID').value = '';
+        };
+
+        const editBooking = async (bookingData) => {
+            // Tải dữ liệu dropdown trước khi mở modal
+            await fetchDropdownData();
+            
+            document.getElementById('BookingID').value = bookingData.BookingID;
+            document.getElementById('UserID').value = bookingData.UserID;
+            document.getElementById('RoomID').value = bookingData.RoomID;
+            document.getElementById('CheckIn').value = bookingData.CheckIn;
+            document.getElementById('CheckOut').value = bookingData.CheckOut;
+            document.getElementById('TotalPrice').value = bookingData.TotalPrice;
+            document.getElementById('Status').value = bookingData.Status;
+            
+            openModal();
+        };
+
+        async function deleteBooking(bookingID) {
+            if (!confirm('Bạn có chắc chắn muốn xóa đặt phòng này không?')) return;
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ BookingID: bookingID })
+                });
+                const result = await response.json();
+                if (response.ok) { showMessage(result.message); fetchBookings(); }
+                else { showMessage(`Lỗi: ${result.message}`, true); }
+            } catch (error) { showMessage(`Lỗi khi xóa đặt phòng: ${error.message}`, true); }
+        }
+
+        bookingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(bookingForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message);
+                    closeModal();
+                    fetchBookings();
+                } else {
+                    showMessage(`Lỗi: ${result.message}`, true);
+                }
+            } catch (error) { showMessage(`Lỗi khi gửi dữ liệu: ${error.message}`, true); }
+        });
+
+        document.addEventListener('DOMContentLoaded', fetchBookings);
+        document.getElementById('toggleSidebar').addEventListener('click', () => { document.getElementById('sidebar').classList.toggle('-translate-x-full'); });
+        window.addEventListener('click', (event) => { if (event.target === bookingModal) { closeModal(); } });
+    </script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Booking • Hồ sơ người dùng</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root{
+            --primary: #9C27B0;
+            --primary-light: #d999d9;
+            --primary-dark: #7B1FA2;
+            --bg: #f7f7f9;
+            --text: #333;
+            --success: #4CAF50;
+            --warning: #FF9800;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:Nunito,Roboto,Arial,sans-serif;}
+        body{background:var(--bg);color:var(--text);line-height:1.6;}
+        a{text-decoration:none;color:inherit;}
+        .container{width:90%;max-width:1180px;margin:0 auto;}
+
+        /* ----- HEADER ----- */
+        header{background:#fff;padding:20px 0;box-shadow:0 2px 4px rgba(0,0,0,.08);position:sticky;top:0;z-index:100;}
+        .logo{font-size:28px;font-weight:700;color:var(--primary);}
+        nav{display:flex;gap:30px;font-weight:600;}
+        nav a{padding:8px 16px;border-radius:20px;transition:all 0.3s ease;}
+        nav a:hover{background:var(--primary-light);color:#fff;}
+        .header-flex{display:flex;justify-content:space-between;align-items:center;}
+
+        /* ----- MAIN CONTENT ----- */
+        .profile-container{padding:80px 0 50px;}
+        .profile-card{
+            background:#fff;padding:30px;border-radius:15px;
+            box-shadow:0 4px 15px rgba(0,0,0,.1);margin-bottom:40px;
+        }
+        h2.section-title{
+            margin:0 0 40px;text-align:left;font-size:32px;
+            color:var(--primary);position:relative;
+        }
+        h2.section-title::after{
+            content:'';width:60px;height:3px;background:var(--primary);
+            position:absolute;bottom:-10px;left:0;
+        }
+        h2.section-title-center{text-align:center;}
+        h2.section-title-center::after{left:50%;transform:translateX(-50%);}
+
+        .form-group {margin-bottom: 15px;}
+        .form-group label {
+            display: block;margin-bottom: 5px;font-weight: bold;color:#555;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;padding: 12px 14px;font-size: 16px;
+            border: 2px solid #e0e0e0;border-radius: 8px;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {outline: none;border-color: var(--primary);}
+        .form-group input:disabled, .form-group textarea:disabled {background-color: #f0f0f0;cursor: not-allowed;}
+        
+        .btn {
+            display:inline-block;padding:14px 32px;border-radius:30px;
+            background:var(--primary);color:#fff;font-weight:700;transition:.25s ease;
+            cursor:pointer;border:none;font-size:16px;
+        }
+        .btn:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(156,39,176,0.3);}
+        .btn-success{background:var(--success);}
+        .btn-success:hover{background:#388e3c;}
+        .btn-danger{background:#dc3545;}
+        .btn-danger:hover{background:#c82333;}
+        .btn-small{padding:8px 16px;font-size:14px;border-radius:20px;}
+        .btn-group {display: flex;gap: 10px;margin-top: 20px;}
+
+        .booking-table {width: 100%;border-collapse: collapse;margin-top: 20px;}
+        .booking-table th, .booking-table td {
+            border: 1px solid #ddd;padding: 12px;text-align: left;
+        }
+        .booking-table th {background-color: #f2f2f2;font-weight: bold;}
+        .booking-status {font-weight: bold;}
+        .status-Pending { color: var(--warning); }
+        .status-Confirmed { color: var(--success); }
+        .status-Cancelled { color: #dc3545; }
+
+        .message { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; font-weight: bold; }
+        .message-success { background-color: #e8f5e9; color: var(--success); }
+        .message-error { background-color: #ffebee; color: var(--danger); }
+
+        /* ----- FOOTER ----- */
+        footer{background:#333;color:#fff;padding:50px 0 20px;}
+        .footer-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px;margin-bottom:30px;}
+        .footer-section h4{color:var(--primary-light);margin-bottom:20px;}
+        .footer-section p, .footer-section a{color:#ccc;line-height:1.8;}
+        .footer-section a:hover{color:#fff;}
+        .footer-bottom{text-align:center;padding-top:20px;border-top:1px solid #555;color:#999;}
+
+        /* ----- SCROLL TO TOP ----- */
+        .scroll-top{position:fixed;bottom:30px;right:30px;background:var(--primary);color:#fff;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:1000;}
+        .scroll-top.show{opacity:1;visibility:visible;}
+        .scroll-top:hover{background:var(--primary-dark);}
+
+        /* ----- RESPONSIVE ----- */
+        @media(max-width:768px){
+            .header-flex{flex-direction:column;gap:20px;}
+            nav{flex-direction:column;gap:10px;}
+            h2.section-title{text-align:center;}
+            h2.section-title::after{left:50%;transform:translateX(-50%);}
+            .btn-group {flex-direction: column;}
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-flex">
+            <a href="main.html" class="logo">🏨 HotelBooking</a>
+            <nav>
+                <a href="main.html">Trang chủ</a>
+                <a href="rooms.html">Phòng</a>
+                <a href="offers.html">Ưu đãi</a>
+                <a href="contact.html">Liên hệ</a>
+                <a href="profile.html" style="background:var(--primary-light); color:#fff;">Hồ Sơ</a>
+                <a href="login.html">Đăng nhập</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container profile-container">
+        <h2 class="section-title">Hồ sơ cá nhân</h2>
+        
+        <div class="profile-card">
+            <h3>Thông tin cá nhân</h3>
+            <form id="user-info-form">
+                <div class="form-group">
+                    <label for="fullname">Họ và tên</label>
+                    <input type="text" id="fullname" name="fullname" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="tel" id="phone" name="phone" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="address">Địa chỉ</label>
+                    <textarea id="address" name="address" disabled></textarea>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="edit-btn" class="btn btn-small">Sửa thông tin</button>
+                    <button type="submit" id="save-btn" class="btn btn-small btn-success" style="display: none;">Lưu</button>
+                    <button type="button" id="cancel-btn" class="btn btn-small btn-danger" style="display: none;">Hủy</button>
+                </div>
+            </form>
+            <div id="message" class="message" style="display: none;"></div>
+        </div>
+
+        <div class="profile-card">
+            <h3>Lịch sử đặt phòng</h3>
+            <div id="booking-list">
+                <p>Đang tải lịch sử đặt phòng...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>HotelBooking</h4>
+                    <p>Hệ thống đặt phòng khách sạn hàng đầu Việt Nam với hơn 5000 chỗ ở chất lượng.</p>
+                    <p>📞 Hotline: 0399999999<br>
+                    📧 Email: TRUNG.vn</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết nhanh</h4>
+                    <p><a href="rooms.html">Tất cả phòng</a></p>
+                    <p><a href="offers.html">Ưu đãi</a></p>
+                    <p><a href="about.html">Về chúng tôi</a></p>
+                    <p><a href="contact.html">Liên hệ</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <p><a href="faq.html">Câu hỏi thường gặp</a></p>
+                    <p><a href="booking-policy.html">Chính sách đặt phòng</a></p>
+                    <p><a href="privacy.html">Chính sách bảo mật</a></p>
+                    <p><a href="terms.html">Điều khoản sử dụng</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Theo dõi chúng tôi</h4>
+                    <p><a href="#">📘 Facebook</a></p>
+                    <p><a href="#">📷 Instagram</a></p>
+                    <p><a href="#">🐦 Twitter</a></p>
+                    <p><a href="#">💼 LinkedIn</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2025 HotelBooking. All rights reserved. | Thiết kế bởi TRUNG
+            </div>
+        </div>
+    </footer>
+
+    <div class="scroll-top" onclick="scrollToTop()">↑</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userInfoForm = document.getElementById('user-info-form');
+            const editBtn = document.getElementById('edit-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const bookingListDiv = document.getElementById('booking-list');
+            const inputs = userInfoForm.querySelectorAll('input, textarea');
+            const messageDiv = document.getElementById('message');
+
+            let originalUserData = {};
+
+            const showMessage = (msg, type) => {
+                messageDiv.textContent = msg;
+                messageDiv.className = `message message-${type}`;
+                messageDiv.style.display = 'block';
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            };
+
+            const toggleEditMode = (isEditing) => {
+                inputs.forEach(input => {
+                    if (input.id !== 'email') { // Email không cho phép sửa
+                        input.disabled = !isEditing;
+                    }
+                });
+                editBtn.style.display = isEditing ? 'none' : 'block';
+                saveBtn.style.display = isEditing ? 'block' : 'none';
+                cancelBtn.style.display = isEditing ? 'block' : 'none';
+            };
+
+            const fetchUserInfo = async () => {
+                try {
+                    const response = await fetch('profile.php?action=get_user_info');
+                    const data = await response.json();
+                    if (response.ok && data.UserID) {
+                        document.getElementById('fullname').value = data.FullName || '';
+                        document.getElementById('email').value = data.Email || '';
+                        document.getElementById('phone').value = data.PhoneNumber || '';
+                        document.getElementById('address').value = data.Address || '';
+                        originalUserData = { ...data };
+                    } else {
+                        showMessage(data.error || 'Lỗi khi tải thông tin người dùng.', 'error');
+                        // Có thể chuyển hướng về trang đăng nhập
+                        // window.location.href = 'login.html';
+                    }
+                } catch (e) {
+                    console.error('Lỗi khi fetch thông tin người dùng:', e);
+                    showMessage('Lỗi kết nối đến server.', 'error');
+                }
+            };
+
+            const fetchBookingHistory = async () => {
+                bookingListDiv.innerHTML = '<p>Đang tải lịch sử đặt phòng...</p>';
+                try {
+                    const response = await fetch('profile.php?action=get_bookings');
+                    const bookings = await response.json();
+                    if (response.ok && Array.isArray(bookings)) {
+                        if (bookings.length === 0) {
+                            bookingListDiv.innerHTML = '<p>Bạn chưa có lịch sử đặt phòng nào.</p>';
+                        } else {
+                            let tableHtml = `
+                                <table class="booking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã ĐP</th>
+                                            <th>Phòng</th>
+                                            <th>Ngày nhận</th>
+                                            <th>Ngày trả</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${bookings.map(booking => `
+                                            <tr>
+                                                <td>${booking.BookingID}</td>
+                                                <td>${booking.RoomNumber}</td>
+                                                <td>${booking.CheckIn}</td>
+                                                <td>${booking.CheckOut}</td>
+                                                <td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(booking.TotalPrice)}</td>
+                                                <td class="booking-status status-${booking.Status}">${booking.Status}</td>
+                                                <td>
+                                                    ${booking.Status === 'Pending' ? `
+                                                    <button class="btn btn-small btn-success" data-action="pay" data-id="${booking.BookingID}">Thanh toán</button>
+                                                    <button class="btn btn-small btn-danger" data-action="cancel" data-id="${booking.BookingID}">Hủy</button>
+                                                    ` : ''}
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            `;
+                            bookingListDiv.innerHTML = tableHtml;
+                        }
+                    } else {
+                        showMessage(bookings.error || 'Lỗi khi tải lịch sử đặt phòng.', 'error');
+                        bookingListDiv.innerHTML = `<p>${bookings.error || 'Lỗi khi tải lịch sử đặt phòng.'}</p>`;
+                    }
+                } catch (e) {
+                    console.error('Lỗi khi tải lịch sử đặt phòng:', e);
+                    bookingListDiv.innerHTML = `<p>Lỗi kết nối đến server. Vui lòng thử lại sau.</p>`;
+                }
+            };
+
+            // Event Listeners
+            editBtn.addEventListener('click', () => {
+                toggleEditMode(true);
+            });
+
+            cancelBtn.addEventListener('click', () => {
+                document.getElementById('fullname').value = originalUserData.FullName || '';
+                document.getElementById('phone').value = originalUserData.PhoneNumber || '';
+                document.getElementById('address').value = originalUserData.Address || '';
+                toggleEditMode(false);
+            });
+
+            userInfoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(userInfoForm);
+                try {
+                    const response = await fetch('profile.php?action=update_user_info', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        fetchUserInfo();
+                        toggleEditMode(false);
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                } catch (e) {
+                    showMessage('Lỗi kết nối đến server khi cập nhật.', 'error');
+                }
+            });
+
+            bookingListDiv.addEventListener('click', async (e) => {
+                const actionBtn = e.target.closest('button');
+                if (!actionBtn) return;
+                
+                const action = actionBtn.dataset.action;
+                const bookingId = actionBtn.dataset.id;
+                
+                if (action === 'cancel' && !confirm('Bạn có chắc chắn muốn hủy đặt phòng này không?')) return;
+                if (action === 'pay' && !confirm('Bạn có chắc chắn muốn thanh toán đặt phòng này không?')) return;
+
+                const formData = new FormData();
+                formData.append('booking_id', bookingId);
+                
+                try {
+                    const response = await fetch(`profile.php?action=${action}_booking`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    showMessage(data.message, data.success ? 'success' : 'error');
+                    if (data.success) {
+                        fetchBookingHistory();
+                    }
+                } catch (e) {
+                    showMessage('Lỗi kết nối đến server khi xử lý đặt phòng.', 'error');
+                }
+            });
+
+            // Scroll to top functionality
+            window.addEventListener('scroll', function() {
+                const scrollTop = document.querySelector('.scroll-top');
+                if (window.pageYOffset > 300) {
+                    scrollTop.classList.add('show');
+                } else {
+                    scrollTop.classList.remove('show');
+                }
+            });
+
+            window.scrollToTop = function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            // Initial data load
+            fetchUserInfo();
+            fetchBookingHistory();
+        });
+    </script>
+</body>
+</html>

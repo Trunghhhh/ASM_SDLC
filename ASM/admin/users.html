@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Người dùng | HotelBooking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f9; }
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .sidebar-menu a:hover { transform: translateX(5px); }
+        .sidebar-menu a.active { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #3b82f6; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e0e7ff; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+    
+    <div class="flex flex-grow">
+        <aside class="w-64 bg-slate-800 text-white flex flex-col rounded-r-3xl shadow-2xl overflow-hidden fixed h-full z-50 transition-all duration-300 ease-in-out lg:static transform -translate-x-full lg:translate-x-0" id="sidebar">
+            <div class="p-6 text-center border-b border-gray-700">
+                <h3 class="text-2xl font-bold">Hotel Admin</h3>
+            </div>
+            <nav class="flex-grow p-4 sidebar-nav">
+                <ul class="space-y-2 sidebar-menu">
+                    <li><a href="dashboard.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-tachometer-alt w-5 mr-3"></i> Dashboard</a></li>
+                    <li><a href="rooms.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-bed w-5 mr-3"></i> Quản lý Phòng</a></li>
+                    <li><a href="bookings.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-calendar-alt w-5 mr-3"></i> Quản lý Đặt phòng</a></li>
+                    <li><a href="users.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all active"><i class="fas fa-users w-5 mr-3"></i> Quản lý Người dùng</a></li>
+                    <li><a href="reports.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-chart-line w-5 mr-3"></i> Báo cáo & Đánh giá</a></li>
+                    <li><a href="settings.html" class="flex items-center p-3 text-sm font-medium rounded-lg text-white hover:bg-slate-700 transition-all"><i class="fas fa-cogs w-5 mr-3"></i> Cài đặt</a></li>
+                </ul>
+            </nav>
+            <div class="p-4 border-t border-gray-700 mt-auto">
+                <a href="../logout.php" id="logoutBtn" class="flex items-center p-3 text-sm font-medium rounded-lg text-red-400 hover:bg-slate-700 transition-all"><i class="fas fa-sign-out-alt w-5 mr-3"></i> Đăng xuất</a>
+            </div>
+        </aside>
+
+        <main class="flex-grow p-6 lg:ml-64 transition-all duration-300 ease-in-out">
+            <header class="bg-white rounded-2xl shadow-lg p-4 flex items-center justify-between mb-6">
+                <div class="flex items-center">
+                    <button id="toggleSidebar" class="lg:hidden p-2 mr-4 text-gray-600 hover:text-gray-900 focus:outline-none"><i class="fas fa-bars text-xl"></i></button>
+                    <h2 id="pageTitle" class="text-2xl font-bold text-gray-800">Quản lý Người dùng</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="user-profile flex items-center">
+                        <img src="https://i.pravatar.cc/40?u=admin" alt="Avatar Admin" class="user-avatar w-10 h-10 rounded-full object-cover border-2 border-indigo-500">
+                        <span class="user-info ml-3 hidden md:block text-gray-700">Chào mừng, <strong id="adminName" class="font-semibold text-gray-900">Admin</strong>!</span>
+                    </div>
+                </div>
+            </header>
+
+            <section id="users-content" class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Danh sách Người dùng</h3>
+                    <button id="addUserBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i> Thêm Người dùng mới
+                    </button>
+                </div>
+
+                <div id="message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span id="message-text" class="block sm:inline"></span>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200 bg-white text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">ID</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Họ và tên</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Email</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Số điện thoại</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Địa chỉ</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-left text-gray-900">Vai trò</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-semibold text-center text-gray-900">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable" class="divide-y divide-gray-200">
+                            <tr>
+                                <td colspan="7" class="px-4 py-2 text-center text-gray-500">Đang tải dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="userModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-11/12 md:w-1/2 p-6">
+            <div class="flex justify-between items-center pb-3">
+                <h3 id="modalTitle" class="text-2xl font-bold text-gray-800">Thêm Người dùng mới</h3>
+                <button class="text-gray-400 hover:text-gray-600" onclick="closeModal()">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="userForm">
+                <input type="hidden" name="UserID" id="UserID">
+                <div class="mb-4">
+                    <label for="FullName" class="block text-gray-700 text-sm font-bold mb-2">Họ và tên</label>
+                    <input type="text" id="FullName" name="FullName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="Email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="Email" name="Email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="Password" class="block text-gray-700 text-sm font-bold mb-2">Mật khẩu</label>
+                    <input type="password" id="Password" name="Password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <p class="text-xs text-gray-500 mt-1">Để trống nếu không muốn thay đổi mật khẩu.</p>
+                </div>
+                <div class="mb-4">
+                    <label for="Phone" class="block text-gray-700 text-sm font-bold mb-2">Số điện thoại</label>
+                    <input type="text" id="Phone" name="Phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label for="Address" class="block text-gray-700 text-sm font-bold mb-2">Địa chỉ</label>
+                    <input type="text" id="Address" name="Address" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div class="mb-4">
+                    <label for="Role" class="block text-gray-700 text-sm font-bold mb-2">Vai trò</label>
+                    <select id="Role" name="Role" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="Customer">Customer</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="bg-gray-400 text-white px-4 py-2 rounded-lg font-medium mr-2 hover:bg-gray-500 transition-colors" onclick="closeModal()">Hủy</button>
+                    <button type="submit" name="action" value="add" id="submitBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">Thêm Người dùng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'users.php';
+        const usersTableBody = document.getElementById('usersTable');
+        const userForm = document.getElementById('userForm');
+        const userModal = document.getElementById('userModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const addUserBtn = document.getElementById('addUserBtn');
+        const messageBox = document.getElementById('message');
+        const messageText = document.getElementById('message-text');
+
+        function showMessage(text, isError = false) {
+            messageText.textContent = text;
+            messageBox.classList.remove('hidden');
+            if (isError) {
+                messageBox.classList.remove('bg-green-100', 'border-green-400', 'text-green-700');
+                messageBox.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+            } else {
+                messageBox.classList.remove('bg-red-100', 'border-red-400', 'text-red-700');
+                messageBox.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
+            }
+            setTimeout(() => { messageBox.classList.add('hidden'); }, 3000);
+        }
+
+        async function fetchUsers() {
+            usersTableBody.innerHTML = '<tr><td colspan="7" class="px-4 py-2 text-center text-gray-500">Đang tải dữ liệu...</td></tr>';
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) { throw new Error('Lỗi máy chủ khi tải dữ liệu.'); }
+                const users = await response.json();
+
+                usersTableBody.innerHTML = '';
+                if (users.length === 0) {
+                    usersTableBody.innerHTML = '<tr><td colspan="7" class="px-4 py-2 text-center text-gray-500">Không có người dùng nào trong hệ thống.</td></tr>';
+                } else {
+                    users.forEach(user => {
+                        const row = `
+                            <tr data-user-id="${user.UserID}">
+                                <td class="px-4 py-2 text-gray-700">${user.UserID}</td>
+                                <td class="px-4 py-2 text-gray-700">${user.FullName}</td>
+                                <td class="px-4 py-2 text-gray-700">${user.Email}</td>
+                                <td class="px-4 py-2 text-gray-700">${user.PhoneNumber}</td>
+                                <td class="px-4 py-2 text-gray-700">${user.Address || 'N/A'}</td>
+                                <td class="px-4 py-2 text-gray-700">${user.Role}</td>
+                                <td class="px-4 py-2 text-center text-gray-700">
+                                    <div class="inline-flex items-center space-x-2">
+                                        <button onclick='editUser(${JSON.stringify(user)})' class="text-blue-600 hover:text-blue-800 transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick='deleteUser(${user.UserID})' class="text-red-600 hover:text-red-800 transition-colors">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                        usersTableBody.innerHTML += row;
+                    });
+                }
+            } catch (error) {
+                usersTableBody.innerHTML = `<tr><td colspan="7" class="px-4 py-2 text-center text-red-500">Lỗi khi tải dữ liệu: ${error.message}</td></tr>`;
+            }
+        }
+
+        const openModal = () => { userModal.classList.remove('hidden'); userModal.classList.add('flex'); };
+        const closeModal = () => {
+            userModal.classList.add('hidden');
+            userModal.classList.remove('flex');
+            userForm.reset();
+            document.getElementById('UserID').value = '';
+            document.getElementById('Password').setAttribute('required', 'required');
+            document.querySelector('p.text-xs.text-gray-500.mt-1').style.display = 'block';
+            modalTitle.textContent = 'Thêm Người dùng mới';
+            submitBtn.textContent = 'Thêm Người dùng';
+            submitBtn.value = 'add';
+        };
+
+        const editUser = (userData) => {
+            document.getElementById('UserID').value = userData.UserID;
+            document.getElementById('FullName').value = userData.FullName;
+            document.getElementById('Email').value = userData.Email;
+            document.getElementById('Phone').value = userData.PhoneNumber;
+            document.getElementById('Address').value = userData.Address; // Cập nhật trường địa chỉ
+            document.getElementById('Role').value = userData.Role;
+            document.getElementById('Password').removeAttribute('required');
+            document.querySelector('p.text-xs.text-gray-500.mt-1').style.display = 'block';
+            
+            modalTitle.textContent = 'Sửa thông tin Người dùng';
+            submitBtn.textContent = 'Cập nhật';
+            submitBtn.value = 'edit';
+            openModal();
+        };
+
+        async function deleteUser(userID) {
+            if (!confirm('Bạn có chắc chắn muốn xóa người dùng này không?')) return;
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ UserID: userID, action: 'delete' })
+                });
+                const result = await response.json();
+                if (response.ok) { showMessage(result.message); fetchUsers(); }
+                else { showMessage(`Lỗi: ${result.message}`, true); }
+            } catch (error) { showMessage(`Lỗi khi xóa người dùng: ${error.message}`, true); }
+        }
+
+        userForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(userForm);
+            const data = Object.fromEntries(formData.entries());
+            data.action = submitBtn.value;
+            const method = data.action === 'add' ? 'POST' : 'PUT';
+
+            if (data.action === 'add' && !data.Password) {
+                showMessage('Mật khẩu là bắt buộc khi thêm người dùng mới.', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message);
+                    closeModal();
+                    fetchUsers();
+                } else {
+                    showMessage(`Lỗi: ${result.message}`, true);
+                }
+            } catch (error) { showMessage(`Lỗi khi gửi dữ liệu: ${error.message}`, true); }
+        });
+
+        addUserBtn.addEventListener('click', () => {
+            closeModal();
+            openModal();
+            document.getElementById('Password').setAttribute('required', 'required');
+        });
+
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        });
+        
+        window.addEventListener('click', (event) => {
+            if (event.target === userModal) { closeModal(); }
+        });
+
+        document.addEventListener('DOMContentLoaded', fetchUsers);
+    </script>
+</body>
+</html>

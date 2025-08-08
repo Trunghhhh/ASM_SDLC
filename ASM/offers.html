@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Booking • Ưu đãi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root{
+            --primary: #9C27B0;
+            --primary-light: #d999d9;
+            --primary-dark: #7B1FA2;
+            --bg: #f7f7f9;
+            --text: #333;
+            --success: #4CAF50;
+            --warning: #FF9800;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:Nunito,Roboto,Arial,sans-serif;}
+        body{background:var(--bg);color:var(--text);line-height:1.6;}
+        a{text-decoration:none;color:inherit;}
+        .container{width:90%;max-width:1180px;margin:0 auto;}
+
+        /* ----- HEADER ----- */
+        header{background:#fff;padding:20px 0;box-shadow:0 2px 4px rgba(0,0,0,.08);position:sticky;top:0;z-index:100;}
+        .logo{font-size:28px;font-weight:700;color:var(--primary);}
+        nav{display:flex;gap:30px;font-weight:600;}
+        nav a{padding:8px 16px;border-radius:20px;transition:all 0.3s ease;}
+        nav a:hover{background:var(--primary-light);color:#fff;}
+        .header-flex{display:flex;justify-content:space-between;align-items:center;}
+
+        /* ----- HERO/BANNER (Custom for Offers) ----- */
+        .hero{
+            background:linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('download (8).jfif') center/cover; /* Đã thay ảnh nền cho ưu đãi */
+            height:50vh; /* Chiều cao nhỏ hơn một chút so với trang chủ */
+            position:relative;color:#fff;
+            display:flex;align-items:center;
+            justify-content:center; /* Căn giữa nội dung */
+            text-align:center;
+        }
+        .hero-content{position:relative;z-index:1;max-width:800px;padding:0 20px;}
+        .hero h1{font-size:45px;line-height:1.2;margin-bottom:14px;text-shadow:2px 2px 4px rgba(0,0,0,0.5);}
+        .hero p{font-size:18px;margin-bottom:26px;text-shadow:1px 1px 2px rgba(0,0,0,0.5);}
+        .btn{
+            display:inline-block;padding:14px 32px;border-radius:30px;
+            background:var(--primary);color:#fff;font-weight:700;transition:.25s ease;
+            cursor:pointer;border:none;font-size:16px;
+        }
+        .btn:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(156,39,176,0.3);}
+        .btn-outline{background:transparent;border:2px solid #fff;color:#fff;}
+        .btn-outline:hover{background:#fff;color:var(--primary);}
+
+        /* ----- SECTION TITLE ----- */
+        h2.section-title{margin:70px 0 40px;text-align:center;font-size:32px;color:var(--primary);position:relative;}
+        h2.section-title::after{content:'';width:60px;height:3px;background:var(--primary);position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);}
+        
+        /* ----- OFFERS GRID (Similar to Featured Rooms) ----- */
+        .offers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px;padding-bottom:80px;}
+        .offer-card{
+            background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,.1);
+            display:flex;flex-direction:column;transition:transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .offer-card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,.15);}
+        .offer-card img{width:100%;height:220px;object-fit:cover;transition:transform 0.3s ease;}
+        .offer-card:hover img{transform:scale(1.05);}
+        .offer-body{padding:20px;flex:1;display:flex;flex-direction:column;}
+        .offer-body h3{font-size:22px;margin-bottom:10px;color:var(--primary);}
+        .offer-body p{color:#666;margin-bottom:8px;}
+        .offer-validity{font-size:14px;color:#888;margin-top:auto;margin-bottom:15px;font-style:italic;}
+        .offer-actions{display:flex;gap:10px;}
+        .btn-small{padding:8px 16px;font-size:14px;border-radius:20px;}
+        .btn-secondary{background:#f5f5f5;color:var(--text);}
+        .btn-secondary:hover{background:#e0e0e0;}
+
+        /* ----- NEWSLETTER (Copied from main.html) ----- */
+        .newsletter{background:var(--primary);color:#fff;padding:60px 0;text-align:center;}
+        .newsletter h3{font-size:28px;margin-bottom:15px;}
+        .newsletter p{margin-bottom:30px;opacity:0.9;}
+        .newsletter-form{display:flex;max-width:400px;margin:0 auto;gap:10px;}
+        .newsletter-form input{flex:1;padding:12px 16px;border:none;border-radius:25px;font-size:16px;}
+        .newsletter-form button{background:#fff;color:var(--primary);border:none;padding:12px 24px;border-radius:25px;font-weight:600;cursor:pointer;}
+
+        /* ----- FOOTER (Copied from main.html) ----- */
+        footer{background:#333;color:#fff;padding:50px 0 20px;}
+        .footer-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px;margin-bottom:30px;}
+        .footer-section h4{color:var(--primary-light);margin-bottom:20px;}
+        .footer-section p, .footer-section a{color:#ccc;line-height:1.8;}
+        .footer-section a:hover{color:#fff;}
+        .footer-bottom{text-align:center;padding-top:20px;border-top:1px solid #555;color:#999;}
+
+        /* ----- SCROLL TO TOP (Copied from main.html) ----- */
+        .scroll-top{position:fixed;bottom:30px;right:30px;background:var(--primary);color:#fff;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:1000;}
+        .scroll-top.show{opacity:1;visibility:visible;}
+        .scroll-top:hover{background:var(--primary-dark);}
+
+        /* ----- RESPONSIVE (Copied from main.html, adjusted for offers) ----- */
+        @media(max-width:768px){
+            .hero h1{font-size:32px;}
+            nav{flex-direction:column;gap:10px;}
+            .header-flex{flex-direction:column;gap:20px;}
+            .newsletter-form{flex-direction:column;}
+            .offer-actions{flex-direction:column;} /* Adjusted for offer cards */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-flex">
+            <a href="main.html" class="logo">🏨 HotelBooking</a>
+
+            <nav>
+                <a href="main.html">Trang chủ</a>
+                <a href="rooms.html">Phòng</a>
+                <a href="offers.html">Ưu đãi</a>
+                <a href="contact.html">Liên hệ</a>
+                <a href="profile.html">Hồ Sơ</a>
+                <a href="login.html">Đăng nhập</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Ưu đãi độc quyền chỉ dành cho bạn</h1>
+            <p>Khám phá các chương trình giảm giá hấp dẫn, gói combo nghỉ dưỡng và nhiều hơn nữa!</p>
+            <a href="#offers-list" class="btn btn-outline">Xem ngay</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Các ưu đãi hiện có</h2>
+        <div class="offers-grid" id="offers-list">
+            <div class="offer-card">
+                <img src="download (3).jfif" alt="Ưu đãi hè">
+                <div class="offer-body">
+                    <h3>Ưu đãi hè rực rỡ</h3>
+                    <p>Giảm giá 20% cho tất cả các phòng khi đặt từ 3 đêm trở lên.</p>
+                    <p>✨ Bao gồm bữa sáng miễn phí và một bữa tối lãng mạn.</p>
+                    <p class="offer-validity">Áp dụng: 15/07/2025 - 31/08/2025</p>
+                    <div class="offer-actions">
+                        <a href="offer-detail.html?id=summer2025" class="btn btn-small">Chi tiết</a>
+                        <button class="btn btn-small btn-secondary" onclick="applyOffer('summer2025')">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="offer-card">
+                <img src="download (4).jfif" alt="Kì nghỉ gia đình">
+                <div class="offer-body">
+                    <h3>Gói kì nghỉ gia đình</h3>
+                    <p>Miễn phí cho trẻ em dưới 12 tuổi, tặng vé vào khu vui chơi trẻ em.</p>
+                    <p>👨‍👩‍👧‍👦 Giảm 15% cho phòng Family Suite.</p>
+                    <p class="offer-validity">Áp dụng: Đến hết 31/12/2025</p>
+                    <div class="offer-actions">
+                        <a href="offer-detail.html?id=familygetaway" class="btn btn-small">Chi tiết</a>
+                        <button class="btn btn-small btn-secondary" onclick="applyOffer('familygetaway')">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="offer-card">
+                <img src="download (5).jfif" alt="Ưu đãi đặt sớm">
+                <div class="offer-body">
+                    <h3>Ưu đãi đặt sớm - Early Bird</h3>
+                    <p>Giảm 10% khi đặt phòng trước 30 ngày so với ngày nhận phòng.</p>
+                    <p>🗓️ Áp dụng cho mọi loại phòng, không giới hạn thời gian lưu trú.</p>
+                    <p class="offer-validity">Áp dụng: Không giới hạn thời gian (áp dụng khi đặt trước 30 ngày)</p>
+                    <div class="offer-actions">
+                        <a href="offer-detail.html?id=earlybird" class="btn btn-small">Chi tiết</a>
+                        <button class="btn btn-small btn-secondary" onclick="applyOffer('earlybird')">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="offer-card">
+                <img src="download (6).jfif" alt="Ưu đãi combo">
+                <div class="offer-body">
+                    <h3>Combo nghỉ dưỡng + Spa</h3>
+                    <p>Tận hưởng 2 đêm nghỉ dưỡng sang trọng kèm gói Spa 90 phút miễn phí.</p>
+                    <p>💆‍♀️ Bao gồm ăn sáng buffet và đưa đón sân bay.</p>
+                    <p class="offer-validity">Áp dụng: Đến hết 30/09/2025</p>
+                    <div class="offer-actions">
+                        <a href="offer-detail.html?id=spapackage" class="btn btn-small">Chi tiết</a>
+                        <button class="btn btn-small btn-secondary" onclick="applyOffer('spapackage')">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="offer-card">
+                <img src="download (7).jfif" alt="Ưu đãi cuối tuần">
+                <div class="offer-body">
+                    <h3>Ưu đãi cuối tuần</h3>
+                    <p>Giảm 10% cho các đặt phòng từ thứ 6 đến Chủ Nhật.</p>
+                    <p>🎉 Tặng kèm cocktail chào mừng khi check-in.</p>
+                    <p class="offer-validity">Áp dụng: Các cuối tuần trong năm 2025</p>
+                    <div class="offer-actions">
+                        <a href="offer-detail.html?id=weekenddeal" class="btn btn-small">Chi tiết</a>
+                        <button class="btn btn-small btn-secondary" onclick="applyOffer('weekenddeal')">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="offer-card">
+                <img src="TV.webp" alt="Ưu đãi đặc biệt"> <div class="offer-body">
+                    <h3>Ưu đãi thành viên Gold</h3>
+                    <p>Giảm thêm 5% và nâng hạng phòng miễn phí (tùy tình trạng).</p>
+                    <p>👑 Dành riêng cho thành viên đã đạt hạng Gold trở lên.</p>
+                    <p class="offer-validity">Áp dụng: Vĩnh viễn (cho thành viên)</p>
+                    <div class="offer-actions">
+                        <a href="offer-detail.html?id=goldmember" class="btn btn-small">Chi tiết</a>
+                        <button class="btn btn-small btn-secondary" onclick="applyOffer('goldmember')">Đặt ngay</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <section class="newsletter">
+        <div class="container">
+            <h3>Đăng ký nhận ưu đãi đặc biệt</h3>
+            <p>Nhận thông tin về các chương trình khuyến mãi và ưu đãi mới nhất</p>
+            <form class="newsletter-form" onsubmit="return subscribeNewsletter()">
+                <input type="email" placeholder="Nhập email của bạn" required>
+                <button type="submit">Đăng ký</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>HotelBooking</h4>
+                    <p>Hệ thống đặt phòng khách sạn hàng đầu Việt Nam với hơn 5000 chỗ ở chất lượng.</p>
+                    <p>📞 Hotline: 0399999999<br>
+                    📧 Email: TRUNG.vn</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết nhanh</h4>
+                    <p><a href="rooms.html">Tất cả phòng</a></p>
+                    <p><a href="offers.html">Ưu đãi</a></p>
+                    <p><a href="about.html">Về chúng tôi</a></p>
+                    <p><a href="contact.html">Liên hệ</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <p><a href="faq.html">Câu hỏi thường gặp</a></p>
+                    <p><a href="booking-policy.html">Chính sách đặt phòng</a></p>
+                    <p><a href="privacy.html">Chính sách bảo mật</a></p>
+                    <p><a href="terms.html">Điều khoản sử dụng</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Theo dõi chúng tôi</h4>
+                    <p><a href="#">📘 Facebook</a></p>
+                    <p><a href="#">📷 Instagram</a></p>
+                    <p><a href="#">🐦 Twitter</a></p>
+                    <p><a href="#">💼 LinkedIn</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2025 HotelBooking. All rights reserved. | Thiết kế bởi TRUNG
+            </div>
+        </div>
+    </footer>
+
+    <div class="scroll-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Newsletter subscription (Copied from main.html)
+        function subscribeNewsletter() {
+            alert('Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi thông tin ưu đãi sớm nhất.');
+            return false;
+        }
+
+        // Apply Offer function (Similar to quickBook in main.html)
+        function applyOffer(offerId) {
+            if (confirm('Bạn có muốn áp dụng ưu đãi này và đặt phòng không?')) {
+                window.location.href = `booking.html?offer=${offerId}`;
+            }
+        }
+
+        // Scroll to top functionality (Copied from main.html)
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.querySelector('.scroll-top');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('show');
+            } else {
+                scrollTop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập | Hotel Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Biến màu sắc tương tự như main.html */
+        :root{
+            --primary: #9C27B0; /* Tím */
+            --primary-light: #d999d9;
+            --primary-dark: #7B1FA2;
+            --bg: #f7f7f9;
+            --text: #333;
+            --secondary-bg: #e0f2f7; /* Màu nền nhẹ cho form */
+        }
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif; /* Sử dụng font Nunito */
+        }
+        body {
+            background: linear-gradient(to right, #e0eafc, #cfdef3); /* Nền gradient nhẹ nhàng */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* Dùng min-height để đảm bảo form luôn giữa trang */
+            margin: 0;
+            padding: 20px; /* Thêm padding để tránh form dính sát mép trên/dưới */
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 40px 50px; /* Tăng padding */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Đổ bóng mạnh hơn, đẹp hơn */
+            max-width: 450px; /* Tăng chiều rộng tối đa */
+            width: 100%;
+            text-align: center; /* Căn giữa nội dung trong container */
+        }
+
+        h2 {
+            font-size: 32px; /* Tăng cỡ chữ */
+            color: var(--primary); /* Sử dụng màu primary */
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px; /* Tăng khoảng cách dưới */
+            font-weight: 600; /* Đậm hơn */
+            color: var(--text);
+            text-align: left; /* Căn trái label */
+        }
+
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 12px 15px; /* Tăng padding */
+            margin-bottom: 20px; /* Tăng khoảng cách dưới */
+            border: 2px solid #ddd; /* Border rõ hơn */
+            border-radius: 10px; /* Bo góc nhiều hơn */
+            font-size: 16px; /* Tăng cỡ chữ */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary); /* Màu border khi focus */
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2); /* Hiệu ứng shadow khi focus */
+        }
+
+        input[type="submit"] {
+            background-color: var(--primary); /* Sử dụng màu primary */
+            color: #fff;
+            padding: 15px 25px; /* Tăng padding */
+            border-radius: 10px; /* Bo góc nhiều hơn */
+            font-weight: 700; /* Đậm hơn */
+            cursor: pointer;
+            transition: 0.3s ease;
+            border: none;
+            font-size: 18px; /* Tăng cỡ chữ */
+            width: 100%; /* Đảm bảo nút rộng bằng các input */
+            margin-top: 10px; /* Khoảng cách trên */
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--primary-dark); /* Màu tối hơn khi hover */
+            transform: translateY(-2px); /* Hiệu ứng nhấc nhẹ */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Shadow khi hover */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 25px; /* Tăng khoảng cách */
+            font-size: 15px; /* Tăng cỡ chữ */
+            color: #666;
+        }
+
+        p a {
+            color: var(--primary); /* Sử dụng màu primary */
+            text-decoration: none;
+            font-weight: 700; /* Đậm hơn */
+            transition: 0.2s ease;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+            color: var(--primary-dark); /* Màu tối hơn khi hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .form-container {
+                padding: 30px 25px;
+            }
+            h2 {
+                font-size: 28px;
+            }
+            input[type="email"],
+            input[type="password"],
+            select {
+                font-size: 15px;
+            }
+            input[type="submit"] {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Đăng nhập vào Hotel Booking</h2>
+        <form action="login.php" method="POST">
+            <label for="role">Bạn là:</label>
+            <select id="role" name="role" onchange="handleRoleChange()" required>
+                <option value="Customer">Khách hàng</option>
+                <option value="Admin">Admin</option>
+            </select>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+
+            <label for="password">Mật khẩu:</label>
+            <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+
+            <div id="adminCodeGroup" class="hidden">
+                <label for="admin_code">Mã admin:</label>
+                <input type="text" id="admin_code" name="admin_code" placeholder="Nhập mã admin">
+            </div>
+
+            <input type="submit" value="Đăng nhập">
+        </form>
+        <p>Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a></p>
+    </div>
+
+    <script>
+        function handleRoleChange() {
+            const role = document.getElementById("role").value;
+            const adminGroup = document.getElementById("adminCodeGroup");
+            
+            // Nếu vai trò là Admin, hiển thị trường mã admin. Ngược lại, ẩn đi.
+            if (role === "Admin") {
+                adminGroup.classList.remove("hidden");
+                document.getElementById("admin_code").setAttribute("required", "required"); // Bắt buộc nhập mã admin
+            } else {
+                adminGroup.classList.add("hidden");
+                document.getElementById("admin_code").removeAttribute("required"); // Không bắt buộc nhập khi ẩn
+            }
+        }
+
+        // Khởi động đúng trạng thái khi tải trang
+        window.onload = handleRoleChange;
+    </script>
+</body>
+</html>

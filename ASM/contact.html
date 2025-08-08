@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Booking • Liên hệ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root{
+            --primary: #9C27B0;
+            --primary-light: #d999d9;
+            --primary-dark: #7B1FA2;
+            --bg: #f7f7f9;
+            --text: #333;
+            --success: #4CAF50;
+            --warning: #FF9800;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:Nunito,Roboto,Arial,sans-serif;}
+        body{background:var(--bg);color:var(--text);line-height:1.6;}
+        a{text-decoration:none;color:inherit;}
+        .container{width:90%;max-width:1180px;margin:0 auto;}
+
+        /* ----- HEADER (Copied from main.html) ----- */
+        header{background:#fff;padding:20px 0;box-shadow:0 2px 4px rgba(0,0,0,.08);position:sticky;top:0;z-index:100;}
+        .logo{font-size:28px;font-weight:700;color:var(--primary);}
+        nav{display:flex;gap:30px;font-weight:600;}
+        nav a{padding:8px 16px;border-radius:20px;transition:all 0.3s ease;}
+        nav a:hover, nav a.active{background:var(--primary-light);color:#fff;} /* Active state for current page */
+        .header-flex{display:flex;justify-content:space-between;align-items:center;}
+
+        /* ----- HERO/BANNER (Custom for Contact) ----- */
+        .hero{
+            background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('download (8).jfif') center/cover no-repeat; /* Ảnh nền cho banner liên hệ */
+            height: 40vh;
+            position: relative;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .hero-content{position:relative;z-index:1;max-width:800px;padding:0 20px;}
+        .hero h1{font-size:45px;line-height:1.2;margin-bottom:14px;text-shadow:2px 2px 4px rgba(0,0,0,0.5);}
+        .hero p{font-size:18px;margin-bottom:26px;text-shadow:1px 1px 2px rgba(0,0,0,0.5);}
+        .btn{ /* Re-used from main.html */
+            display:inline-block;padding:14px 32px;border-radius:30px;
+            background:var(--primary);color:#fff;font-weight:700;transition:.25s ease;
+            cursor:pointer;border:none;font-size:16px;
+        }
+        .btn:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(156,39,176,0.3);}
+        .btn-outline{background:transparent;border:2px solid #fff;color:#fff;}
+        .btn-outline:hover{background:#fff;color:var(--primary);}
+
+        /* ----- SECTION TITLE (Copied from main.html) ----- */
+        h2.section-title{margin:70px 0 40px;text-align:center;font-size:32px;color:var(--primary);position:relative;}
+        h2.section-title::after{content:'';width:60px;height:3px;background:var(--primary);position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);}
+        
+        /* ----- CONTACT 3-COLUMN LAYOUT ----- */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 3 columns, responsive */
+            gap: 30px;
+            padding-bottom: 80px;
+        }
+
+        .contact-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.1);
+            display: flex;
+            flex-direction: column;
+            text-align: center; /* Center content in cards */
+        }
+        .contact-card h3 {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+        .contact-card p {
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+        .contact-card strong {
+            color: var(--text);
+        }
+
+        /* Styles specific to form inputs within contact-card */
+        .contact-card form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+            text-align: left; /* Align labels left */
+        }
+        .contact-card form input,
+        .contact-card form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .contact-card form input:focus,
+        .contact-card form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .contact-card form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .contact-card form button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 10px;
+        }
+
+        /* Styles for Map iframe */
+        .contact-card iframe {
+            width: 100%;
+            height: 350px; /* Adjust height for map */
+            border-radius: 10px;
+            border: none;
+            margin-top: 10px; /* Space from title/text above */
+        }
+
+        /* ----- NEWSLETTER (Copied from main.html) ----- */
+        .newsletter{background:var(--primary);color:#fff;padding:60px 0;text-align:center;}
+        .newsletter h3{font-size:28px;margin-bottom:15px;}
+        .newsletter p{margin-bottom:30px;opacity:0.9;}
+        .newsletter-form{display:flex;max-width:400px;margin:0 auto;gap:10px;}
+        .newsletter-form input{flex:1;padding:12px 16px;border:none;border-radius:25px;font-size:16px;}
+        .newsletter-form button{background:#fff;color:var(--primary);border:none;padding:12px 24px;border-radius:25px;font-weight:600;cursor:pointer;}
+
+        /* ----- FOOTER (Copied from main.html) ----- */
+        footer{background:#333;color:#fff;padding:50px 0 20px;}
+        .footer-content{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:40px;margin-bottom:30px;}
+        .footer-section h4{color:var(--primary-light);margin-bottom:20px;}
+        .footer-section p, .footer-section a{color:#ccc;line-height:1.8;}
+        .footer-section a:hover{color:#fff;}
+        .footer-bottom{text-align:center;padding-top:20px;border-top:1px solid #555;color:#999;}
+
+        /* ----- SCROLL TO TOP (Copied from main.html) ----- */
+        .scroll-top{position:fixed;bottom:30px;right:30px;background:var(--primary);color:#fff;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:1000;}
+        .scroll-top.show{opacity:1;visibility:visible;}
+        .scroll-top:hover{background:var(--primary-dark);}
+
+        /* ----- RESPONSIVE (Copied and adapted from main.html) ----- */
+        @media(max-width:768px){
+            .hero h1{font-size:32px;}
+            nav{flex-direction:column;gap:10px;}
+            .header-flex{flex-direction:column;gap:20px;}
+            .newsletter-form{flex-direction:column;}
+            /* grid will naturally stack due to minmax and auto-fit */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-flex">
+            <a href="main.html" class="logo">🏨 HotelBooking</a>
+
+            <nav>
+                <a href="main.html">Trang chủ</a>
+                <a href="rooms.html">Phòng</a>
+                <a href="offers.html">Ưu đãi</a>
+                <a href="contact.html" class="active">Liên hệ
+                    <a href="profile.html">Hồ Sơ</a>
+                </a> <a href="login.html">Đăng nhập</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Chúng tôi luôn sẵn lòng lắng nghe bạn</h1>
+            <p>Hãy liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi hoặc yêu cầu nào.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Kết nối với chúng tôi</h2>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <h3>Thông tin liên hệ</h3>
+                <p>📍 <strong>Địa chỉ:</strong> 123 Đường Trần Phú, Quận 1, TP. Hồ Chí Minh</p>
+                <p>📞 <strong>Điện thoại:</strong> 0399999999</p>
+                <p>📧 <strong>Email:</strong> TRUNG.vn</p>
+                <p>⏰ <strong>Giờ làm việc:</strong> 08:00 - 20:00 (Thứ 2 - Chủ Nhật)</p>
+                <p>Chúng tôi luôn sẵn lòng hỗ trợ bạn trong giờ làm việc.</p>
+            </div>
+
+            <div class="contact-card">
+                <h3>Gửi tin nhắn cho chúng tôi</h3>
+                <form id="contactForm">
+                    <label for="name">Họ và tên:</label>
+                    <input type="text" id="name" name="name" placeholder="Ví dụ: Nguyễn Văn A" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Ví dụ: emailcuaban@example.com" required>
+
+                    <label for="subject">Chủ đề:</label>
+                    <input type="text" id="subject" name="subject" placeholder="Ví dụ: Đặt phòng, Hỗ trợ kỹ thuật..." required>
+
+                    <label for="message">Nội dung tin nhắn:</label>
+                    <textarea id="message" name="message" placeholder="Viết tin nhắn của bạn ở đây..." required></textarea>
+
+                    <button type="submit" class="btn">Gửi tin nhắn</button>
+                </form>
+            </div>
+
+            <div class="contact-card">
+                <h3>Tìm chúng tôi trên bản đồ</h3>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4975545851493!2d106.6974735147184!3d10.775843492324707!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f36d418e3dd%3A0x7d6f0c6c1a8a2a5!2sBitexco%20Financial%20Tower!5e0!3m2!1sen!2s!4v1678901234567!5m2!1sen!2s"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <p>Tòa nhà Bitexco Financial Tower, Quận 1, TP.HCM</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="newsletter">
+        <div class="container">
+            <h3>Đăng ký nhận ưu đãi đặc biệt</h3>
+            <p>Nhận thông tin về các chương trình khuyến mãi và ưu đãi mới nhất</p>
+            <form class="newsletter-form" onsubmit="return subscribeNewsletter()">
+                <input type="email" placeholder="Nhập email của bạn" required>
+                <button type="submit">Đăng ký</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>HotelBooking</h4>
+                    <p>Hệ thống đặt phòng khách sạn hàng đầu Việt Nam với hơn 5000 chỗ ở chất lượng.</p>
+                    <p>📞 Hotline: 0399999999<br>
+                    📧 Email: TRUNG.vn</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liên kết nhanh</h4>
+                    <p><a href="rooms.html">Tất cả phòng</a></p>
+                    <p><a href="offers.html">Ưu đãi</a></p>
+                    <p><a href="about.html">Về chúng tôi</a></p>
+                    <p><a href="contact.html">Liên hệ</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Hỗ trợ</h4>
+                    <p><a href="faq.html">Câu hỏi thường gặp</a></p>
+                    <p><a href="booking-policy.html">Chính sách đặt phòng</a></p>
+                    <p><a href="privacy.html">Chính sách bảo mật</a></p>
+                    <p><a href="terms.html">Điều khoản sử dụng</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Theo dõi chúng tôi</h4>
+                    <p><a href="#">📘 Facebook</a></p>
+                    <p><a href="#">📷 Instagram</a></p>
+                    <p><a href="#">🐦 Twitter</a></p>
+                    <p><a href="#">💼 LinkedIn</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2025 HotelBooking. All rights reserved. | Thiết kế bởi TRUNG
+            </div>
+        </div>
+    </footer>
+
+    <div class="scroll-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Newsletter subscription (Copied from main.html)
+        function subscribeNewsletter() {
+            alert('Cảm ơn bạn đã đăng ký! Chúng tôi sẽ gửi thông tin ưu đãi sớm nhất.');
+            return false;
+        }
+
+        // Scroll to top functionality (Copied from main.html)
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.querySelector('.scroll-top');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('show');
+            } else {
+                scrollTop.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Contact Form Submission (Example)
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            console.log('Form Submitted:');
+            console.log('Name:', name);
+            console.log('Email:', email);
+            console.log('Subject:', subject);
+            console.log('Message:', message);
+
+            alert('Cảm ơn bạn đã gửi tin nhắn! Chúng tôi sẽ liên hệ lại sớm nhất có thể.');
+            this.reset(); // Clear the form
+        });
+    </script>
+
+</body>
+</html>
